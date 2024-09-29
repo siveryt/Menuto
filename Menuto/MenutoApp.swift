@@ -17,23 +17,68 @@ struct MenutoApp: App {
     
     var timer = Timer.publish(every: 1, on: .main, in: .common).autoconnect()
     
+    
+    
     var body: some Scene {
-        MenuBarExtra(String(format: "%02d:%02d", timeRemaining / 60, timeRemaining % 60)) {
+        
+        let secondsRemaining = Binding(
+            get: { String(self.timeRemaining%60) },
+            set: { newValue in
+                if let intValue = Int(newValue) {
+                    
+                    let hoursLeftOnTimer = Int(self.timeRemaining/3600)
+                    let minutesLeftOnTimer = Int(self.timeRemaining/60%60)
+                    let newSeconds = intValue
+                    self.timeRemaining = hoursLeftOnTimer * 3600 + minutesLeftOnTimer * 60 + newSeconds
+                }
+            }
+        )
+        
+        let minutesRemaining = Binding(
+            get: { String(self.timeRemaining/60%60) },
+            set: { newValue in
+                if let intValue = Int(newValue) {
+                    let hoursLeftOnTimer = Int(self.timeRemaining/3600)
+                    let newMinutes = intValue
+                    let secondsLeftOnTimer = self.timeRemaining % 60
+                    
+                    self.timeRemaining = hoursLeftOnTimer * 3600 + newMinutes * 60 + secondsLeftOnTimer
+                }
+            }
+        )
+        
+        let hoursRemaining = Binding(
+            get: { String(self.timeRemaining/3600) },
+            set: { newValue in
+                if let intValue = Int(newValue) {
+                    let newHours = intValue
+                    let minutesLeftOnTimer = Int(self.timeRemaining/60%60)
+                    let secondsLeftOnTimer = self.timeRemaining % 60
+                    
+                    self.timeRemaining = newHours * 3600 + minutesLeftOnTimer * 60 + secondsLeftOnTimer
+                }
+            }
+        )
+        
+        MenuBarExtra(String(format: "%02d:%02d:%02d", Int(self.timeRemaining/3600), Int(self.timeRemaining/60%60), self.timeRemaining % 60)) {
             VStack {
                 
                 LabeledContent {
-                    TextField("Enter number", text: Binding(
-                        get: { String(self.timeRemaining/60) },
-                        set: { newValue in
-                            if let intValue = Int(newValue) {
-                                self.timeRemaining = intValue*60
-                            } else {
-                                self.timeRemaining = 60
-                            }
-                        }
-                    ))
+                    TextField("Enter number", text: hoursRemaining)
+                } label: {
+                    Text("Hours")
+                }
+                
+                LabeledContent {
+                    TextField("Enter number", text: minutesRemaining)
                 } label: {
                     Text("Minutes")
+                }
+                
+                LabeledContent {
+                    TextField("Enter number", text: secondsRemaining)
+                } label: {
+                    Text("Seconds")
                 }
                 
                 Divider()
