@@ -58,24 +58,16 @@ struct MenutoApp: App {
         
         MenuBarExtra( Int(self.timeRemaining/3600) == 0 ? String(format: "%02d:%02d", Int(self.timeRemaining/60%60), self.timeRemaining % 60) : String(format: "%02d:%02d:%02d", Int(self.timeRemaining/3600), Int(self.timeRemaining/60%60), self.timeRemaining % 60)) {
             VStack {
-                
-                LabeledContent {
-                    TextField("Enter number", text: hoursRemaining)
-                } label: {
-                    Text("Hours")
+                HStack {
+                    TextField("hrs", text: hoursRemaining)
+                    Text(":")
+                    TextField("min", text: minutesRemaining)
+                    Text(":")
+                    TextField("sec", text: secondsRemaining)
                 }
+                .font(.system(size: 24))
+                .multilineTextAlignment(.center)
                 
-                LabeledContent {
-                    TextField("Enter number", text: minutesRemaining)
-                } label: {
-                    Text("Minutes")
-                }
-                
-                LabeledContent {
-                    TextField("Enter number", text: secondsRemaining)
-                } label: {
-                    Text("Seconds")
-                }
                 
                 Divider()
                 HStack {
