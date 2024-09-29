@@ -10,14 +10,10 @@ import UserNotifications
 
 @main
 struct MenutoApp: App {
-    @AppStorage("setMinutes") var setMinutes: Int = 5;
-    
-    @State private var timeRemaining: Int = 60 // Timer duration in seconds
+    @AppStorage("timeRemaining") var timeRemaining: Int = 60 // Timer duration in seconds
     @State private var running: Bool = false;
     
     var timer = Timer.publish(every: 1, on: .main, in: .common).autoconnect()
-    
-    
     
     var body: some Scene {
         
