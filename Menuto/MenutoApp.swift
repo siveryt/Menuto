@@ -6,6 +6,7 @@
 //
 
 import SwiftUI
+import UserNotifications
 
 @main
 struct MenutoApp: App {
@@ -47,8 +48,35 @@ struct MenutoApp: App {
                 }
             }
             .padding()
+            .onAppear() {
+                UNUserNotificationCenter.current().requestAuthorization(options: [.alert, .badge, .sound]) { success, error in
+                    if success {
+                        print("All set!")
+                    } else if let error {
+                        print(error.localizedDescription)
+                    }
+                }
+                
+            }
             .onReceive(timer) { input in
                 if (!running) { return };
+                
+                // Check if timer ran out
+                if (timeRemaining <= 0) {
+                    // Send notification
+                    let content = UNMutableNotificationContent()
+                    content.title = "Your timer ran out"
+                    content.sound = .default
+
+                    let request = UNNotificationRequest(identifier: UUID().uuidString, content: content, trigger: nil)
+
+                    UNUserNotificationCenter.current().add(request)
+                    
+                    
+                    running = false
+                    return
+                }
+                
                 timeRemaining -= 1
             }
             
