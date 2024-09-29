@@ -60,7 +60,7 @@ struct MenutoApp: App {
             }
         )
         
-        MenuBarExtra(String(format: "%02d:%02d:%02d", Int(self.timeRemaining/3600), Int(self.timeRemaining/60%60), self.timeRemaining % 60)) {
+        MenuBarExtra( Int(self.timeRemaining/3600) == 0 ? String(format: "%02d:%02d", Int(self.timeRemaining/60%60), self.timeRemaining % 60) : String(format: "%02d:%02d:%02d", Int(self.timeRemaining/3600), Int(self.timeRemaining/60%60), self.timeRemaining % 60)) {
             VStack {
                 
                 LabeledContent {
