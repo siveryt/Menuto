@@ -28,7 +28,7 @@ struct MenutoApp: App {
                     
                     let hoursLeftOnTimer = Int(self.timeRemaining/3600)
                     let minutesLeftOnTimer = Int(self.timeRemaining/60%60)
-                    let newSeconds = intValue
+                    let newSeconds = min(intValue, 1024)
                     self.timeRemaining = hoursLeftOnTimer * 3600 + minutesLeftOnTimer * 60 + newSeconds
                 }
             }
@@ -39,7 +39,7 @@ struct MenutoApp: App {
             set: { newValue in
                 if let intValue = Int(newValue) {
                     let hoursLeftOnTimer = Int(self.timeRemaining/3600)
-                    let newMinutes = intValue
+                    let newMinutes = min(intValue, 1024)
                     let secondsLeftOnTimer = self.timeRemaining % 60
                     
                     self.timeRemaining = hoursLeftOnTimer * 3600 + newMinutes * 60 + secondsLeftOnTimer
@@ -51,7 +51,7 @@ struct MenutoApp: App {
             get: { String(self.timeRemaining/3600) },
             set: { newValue in
                 if let intValue = Int(newValue) {
-                    let newHours = intValue
+                    let newHours = min(intValue, 1024)
                     let minutesLeftOnTimer = Int(self.timeRemaining/60%60)
                     let secondsLeftOnTimer = self.timeRemaining % 60
                     
