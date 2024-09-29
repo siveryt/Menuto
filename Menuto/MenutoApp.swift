@@ -23,12 +23,12 @@ struct MenutoApp: App {
                 
                 LabeledContent {
                     TextField("Enter number", text: Binding(
-                        get: { String(self.setMinutes) },
+                        get: { String(self.timeRemaining/60) },
                         set: { newValue in
                             if let intValue = Int(newValue) {
-                                self.setMinutes = intValue
+                                self.timeRemaining = intValue*60
                             } else {
-                                self.setMinutes = 0
+                                self.timeRemaining = 60
                             }
                         }
                     ))
