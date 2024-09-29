@@ -75,8 +75,8 @@ struct MenutoApp: App {
                         NSApplication.shared.terminate(nil)
                     }.keyboardShortcut("q")
                     Spacer()
-                    Button("Start") {
-                        running = true;
+                    Button(running ? "Pause" : "Start") {
+                        running.toggle();
                     }
                 }
             }
