@@ -19,6 +19,8 @@ struct MenutoApp: App {
     
     var timer = Timer.publish(every: 1, on: .main, in: .common).autoconnect()
     
+    @State private var notificationStatus: UNAuthorizationStatus? = nil
+    
     var body: some Scene {
         
         let secondsRemaining = Binding(
@@ -81,6 +83,17 @@ struct MenutoApp: App {
                 .font(.system(size: 24))
                 .multilineTextAlignment(.center)
                 
+                if (notificationStatus == .denied) {
+                    Text("Please enable notifications to be notified when the timer runs out.")
+                        .foregroundColor(.red)
+                        .multilineTextAlignment(.center)
+                        .onTapGesture {
+                            // Open the settings when the text is clicked
+                            if let url = URL(string: "x-apple.systempreferences:com.apple.preference.notifications") {
+                                NSWorkspace.shared.open(url)
+                            }
+                        }
+                }
                 
                 Divider()
                 HStack {
@@ -102,6 +115,12 @@ struct MenutoApp: App {
                         print(error.localizedDescription)
                     }
                 }
+                UNUserNotificationCenter.current().getNotificationSettings { settings in
+                    DispatchQueue.main.async {
+                        self.notificationStatus = settings.authorizationStatus
+                    }
+                }
+                
                 
             }
             .onReceive(timer) { input in
@@ -113,10 +132,10 @@ struct MenutoApp: App {
                     let content = UNMutableNotificationContent()
                     content.title = "Your timer ran out"
                     content.sound = UNNotificationSound(named: UNNotificationSoundName("ding.wav"))
-
-
+                    
+                    
                     let request = UNNotificationRequest(identifier: UUID().uuidString, content: content, trigger: nil)
-
+                    
                     UNUserNotificationCenter.current().add(request)
                     
                     
