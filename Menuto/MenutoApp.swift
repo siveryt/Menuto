@@ -13,6 +13,10 @@ struct MenutoApp: App {
     @AppStorage("timeRemaining") var timeRemaining: Int = 60 // Timer duration in seconds
     @State private var running: Bool = false;
     
+    @State var hoveringHours = false
+    @State var hoveringMinutes = false
+    @State var hoveringSeconds = false
+    
     var timer = Timer.publish(every: 1, on: .main, in: .common).autoconnect()
     
     var body: some Scene {
@@ -60,10 +64,19 @@ struct MenutoApp: App {
             VStack {
                 HStack {
                     TextField("hrs", text: hoursRemaining)
+                        .onHover { hover in
+                            hoveringHours = hover
+                        }
                     Text(":")
                     TextField("min", text: minutesRemaining)
+                        .onHover { hover in
+                            hoveringMinutes = hover
+                        }
                     Text(":")
                     TextField("sec", text: secondsRemaining)
+                        .onHover { hover in
+                            hoveringSeconds = hover
+                        }
                 }
                 .font(.system(size: 24))
                 .multilineTextAlignment(.center)
@@ -112,7 +125,21 @@ struct MenutoApp: App {
                 
                 timeRemaining -= 1
             }
-            
+            .onAppear(perform:{
+                NSEvent.addLocalMonitorForEvents(matching: .scrollWheel) {event in
+                    if (hoveringHours) {
+                        hoursRemaining.wrappedValue = String(self.timeRemaining/3600 + Int(event.deltaY))
+                    }
+                    if (hoveringMinutes) {
+                        minutesRemaining.wrappedValue = String(self.timeRemaining/60%60 + Int(event.deltaY))
+                    }
+                    if (hoveringSeconds) {
+                        secondsRemaining.wrappedValue = String(self.timeRemaining%60 + Int(event.deltaY))
+                    }
+                    
+                    return event
+                }
+            })
         }.menuBarExtraStyle(.window)
     }
     
