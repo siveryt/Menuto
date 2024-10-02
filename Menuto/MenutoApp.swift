@@ -112,7 +112,8 @@ struct MenutoApp: App {
                     // Send notification
                     let content = UNMutableNotificationContent()
                     content.title = "Your timer ran out"
-                    content.sound = .default
+                    content.sound = UNNotificationSound(named: UNNotificationSoundName("ding.wav"))
+
 
                     let request = UNNotificationRequest(identifier: UUID().uuidString, content: content, trigger: nil)
 
