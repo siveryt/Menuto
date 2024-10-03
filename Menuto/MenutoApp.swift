@@ -98,10 +98,16 @@ struct MenutoApp: App {
                 
                 Divider()
                 HStack {
+                    Button("About") {
+                        NSApplication.shared.orderFrontStandardAboutPanel(nil)
+                    }
+                    
                     Button("Quit") {
                         NSApplication.shared.terminate(nil)
                     }.keyboardShortcut("q")
+                    
                     Spacer()
+                    
                     Button(running ? "Pause" : "Start") {
                         running.toggle();
                     }
