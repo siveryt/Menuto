@@ -7,6 +7,7 @@
 
 import SwiftUI
 import UserNotifications
+import ServiceManagement
 
 @main
 struct MenutoApp: App {
@@ -121,6 +122,11 @@ struct MenutoApp: App {
                     }
                 }
                 
+                do {
+                    try SMAppService.mainApp.register()
+                } catch {
+                    print("Failed to register main app service: \(error.localizedDescription)")
+                }
                 
             }
             .onReceive(timer) { input in
